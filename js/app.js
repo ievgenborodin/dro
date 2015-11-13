@@ -27,15 +27,6 @@ define(["jquery", "src/ximg", "src/dro"], function($, ximg, Dro) {
         callback: dro.load
     });   
     
-    /* /// Save button  /// */    
-    $('#save').on('click',function(){
-        $.post("html/save.php", {
-            data: $('#' + canvasId)[0].toDataURL("image/png")
-        }, function (file) {
-            window.location.href =  "html/download.php?path=" + file
-        });
-    });
-    
     /* /////    Click to toggle Samples     ///// */
     $('.sample').on('click', function(){
         var e = $(this);
@@ -44,7 +35,7 @@ define(["jquery", "src/ximg", "src/dro"], function($, ximg, Dro) {
         if (e.hasClass('active')){
             currSrc = 'img/samples/'+e.attr('id')+'.jpg';
             ximg.loadFile({ src: currSrc, width: dro.getWidth(),
-                        height: dro.getHeight(), callback: dro.load });
+                        height: dro.getHeight(), callback: dro.load               });
         }
     });
             
@@ -63,8 +54,8 @@ define(["jquery", "src/ximg", "src/dro"], function($, ximg, Dro) {
     
     /* /// size left /// */
     $('#sizeRight').on('mouseup touchend', function(e){
-        ximg.loadFile({ src: currSrc, width: dro.getWidth(),
-                        height: dro.getHeight(), callback: dro.load, valueRight: this.value });
+        dro.setGridSize(parseInt(this.value));
+        dro.reRender();
     });
     
     $('#leftControl input, #rightControl input').on('mouseup touchend', function(e){
@@ -95,7 +86,26 @@ define(["jquery", "src/ximg", "src/dro"], function($, ximg, Dro) {
     $('#btn-grid').on('click', function(e){
         grid = (grid) ? false : true;
         dro.setGrid(grid);
-        ximg.loadFile({ src: currSrc, width: dro.getWidth(),
-                        height: dro.getHeight(), callback: dro.load });
+        dro.reRender();
     });
+    
+    $('#saveImage').on('click', function(e){
+        dro.presetImage();
+        save();
+        dro.reRender();
+    });
+    
+    $('#saveGrid').on('click', function(e){
+        dro.presetGrid();
+        save();
+        dro.reRender();
+    });
+    
+    function save(){
+        $.post("html/save.php", {
+            data: $('#' + canvasId)[0].toDataURL("image/png")
+        }, function (file) {
+            window.location.href =  "html/download.php?path=" + file
+        });
+    }
 });

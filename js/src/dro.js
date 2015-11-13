@@ -16,8 +16,23 @@ define(["jquery"], function($) {
       screenState();  
         
      this.setGrid = function(gridVal){
-        grid = gridVal;
+        needGrid = gridVal;
      };    
+        
+     this.setGridSize = function(gridSize){
+        gridX = gridSize;
+        gridY = gridSize;
+     };
+        
+     this.presetImage = function(){
+        clr();
+        drawImage();
+     }; 
+        
+     this.presetGrid = function(){
+        clr();
+        drawGrid();
+     };
         
      this.getWidth = function(){
         return screenWidth;
@@ -31,7 +46,6 @@ define(["jquery"], function($) {
           iData = idata;
           dots = idots;
           sides = isides;
-          context.clearRect(0, 0, screenWidth, screenHeight);    
           drawToCanvas();
      };
        
@@ -39,9 +53,29 @@ define(["jquery"], function($) {
         screenState();
      };
         
-    this.drawGrid = function(){
-        if (needGrid) {
-            var height = canvas.height(),
+    this.reRender = function(){
+        drawToCanvas();
+    };    
+        
+    
+        
+      /* //////	SCREEN STATE	//// */
+    function screenState(){
+        var tmpHeight = Math.floor(canvasWrapper.innerWidth() * 1.2); 
+        canvasWrapper.innerHeight(tmpHeight + 'px');
+        canvas.attr('width', canvasWrapper.width()-2 + 'px')
+              .attr('height', canvasWrapper.height()-6 + 'px');
+        screenWidth = canvas.width();
+        screenHeight = canvas.height();
+        centerPoint = {
+            x: screenWidth / 2, 
+            y: screenHeight / 2
+        };
+    };    
+    
+    /* ///// Draw Grid //// */
+    function drawGrid(){
+        var height = canvas.height(),
                 width = canvas.width(),
                 w = width / gridX,
                 h = height / gridY,
@@ -62,27 +96,16 @@ define(["jquery"], function($) {
                 context.lineTo(width, temp);
                 context.stroke();    
             }
-        };
+    };
+
+    /*  ///// Clear Screen ///// */
+    function clr(){
+        context.clearRect(0, 0, screenWidth, screenHeight);
     };    
         
-      /* //////	SCREEN STATE	//// */
-    function screenState(){
-        var tmpHeight = Math.floor(canvasWrapper.innerWidth() * 1.2); 
-        canvasWrapper.innerHeight(tmpHeight + 'px');
-        canvas.attr('width', canvasWrapper.width()-2 + 'px')
-              .attr('height', canvasWrapper.height()-6 + 'px');
-        screenWidth = canvas.width();
-        screenHeight = canvas.height();
-        centerPoint = {
-            x: screenWidth / 2, 
-            y: screenHeight / 2
-        };
-    };    
-         
-
-    /*  /////  Draw To Canvas   ///// */
-    function drawToCanvas(){        
-            var len = (sides.left.length - sides.top.length > 0) ? sides.left.length : sides.top.length;  
+    /* /////  Draw Image ///// */
+    function drawImage(){
+        var len = (sides.left.length - sides.top.length > 0) ? sides.left.length : sides.top.length;  
             for(var i=0; i<len; i++){
               if (sides.left[i]){
                 context.fillStyle = "#"+sides.left[i].dhex;
@@ -101,7 +124,15 @@ define(["jquery"], function($) {
                 context.fillRect(sides.bottom[i].x, sides.bottom[i].y, 1,1);
               }
             }
-          };
+    };
+        
+    /*  /////  Draw To Canvas   ///// */
+    function drawToCanvas(){        
+        clr();
+        drawImage();
+        if (needGrid)
+            drawGrid();
+    };
         
         /*	/////    WINDOW TO CANVAS	///// */
             wtc = function(canvas, x, y) {

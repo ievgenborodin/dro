@@ -39,7 +39,7 @@
                         <img class="img-responsive" src="img/_grid2.png">
                     </div>
                     <div id="size-div" class="col-xs-5 col-sm-5 col-md-5 size">
-                        <input type="range" id="sizeRight" min="128" max="255" step="1" value="120"> 
+                        <input type="range" id="sizeRight" min="1" max="10" step="1" value="5"> 
                     </div>
                     <div class="clear"></div>
                 </div>
@@ -96,10 +96,10 @@
                         <div class="clear"></div>
                       <hr class="hr-clear">
                       <div class="col-xs-12">
-                        <span class="btn-regular">save image</span>
+                        <span id="saveImage" class="btn-regular">save image</span>
                       </div>
                       <div class="col-xs-12">
-                        <span class="btn-regular">save grid</span>
+                        <span id="saveGrid" class="btn-regular">save grid</span>
                       </div>
                 </div>
             </div>
